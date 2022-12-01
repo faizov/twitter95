@@ -4,12 +4,14 @@ import styled from "styled-components";
 import { LeftMenu } from "../../components/home/leftMenu";
 const JsonPosts = [
   {
+    id: 1,
     avatar: "https://placekitten.com/100/100",
     name: "Yuriy Faizov",
     nickname: "@faizov",
     text: "321 trest",
   },
   {
+    id: 2,
     avatar:
       "https://sun9-34.userapi.com/impg/D1QEdA_0uINV_egDZDRcfQJaY9_1ZJMTLIaWiA/TFxJqXvtEuU.jpg?size=1280x960&quality=95&sign=34f202ab6e027220f70eb1e89a267e11&type=album",
     name: "Yuriy Faizov",
@@ -17,40 +19,36 @@ const JsonPosts = [
     text: "texttexttexttexttexttextttexttexttexttexttexttexttexttexttexttextexttexttexttexttexttexttexttexttexttextexttexttexttexttexttexttexttexttexttex texttexttexttexttexttexttexttexttexttextexttexttexttexttexttexttexttexttexttextexttexttexttexttexttexttexttexttexttex texttexttexttexttexttexttexttexttexttextexttexttexttexttexttexttexttexttexttextexttexttexttexttexttexttexttexttexttex texttexttexttexttexttexttexttexttexttextexttexttexttexttexttexttexttexttexttextexttexttexttexttexttexttexttexttexttex texttexttexttexttexttexttexttexttexttextexttexttexttexttexttexttexttexttexttextexttexttexttexttexttexttexttexttexttex",
   },
   {
-    avatar: "https://placekitten.com/100/100",
-    name: "Yuriy Faizov",
-    nickname: "@faizov",
-    text: "tex фыв",
+    id: 3,
+    avatar:
+      "https://sun9-82.userapi.com/impf/c850728/v850728240/97bea/b4W__CgjwcI.jpg?size=762x316&quality=96&sign=1e328f3d63295549f2defe81087ebe10&type=album",
+    name: "Yuriy F.",
+    nickname: "@yuriy",
+    text: "Tweet wow! ",
   },
   {
-    avatar: "https://placekitten.com/100/100",
-    name: "Yuriy Faizov",
-    nickname: "@faizov",
-    text: "asdasd",
+    id: 4,
+    avatar:
+      "https://sun9-82.userapi.com/impf/c850728/v850728240/97bea/b4W__CgjwcI.jpg?size=762x316&quality=96&sign=1e328f3d63295549f2defe81087ebe10&type=album",
+    name: "Yuriy F.",
+    nickname: "@yuriy",
+    text: "Tweet wow! ",
   },
   {
-    avatar: "https://placekitten.com/100/100",
-    name: "Yuriy Faizov",
-    nickname: "@faizov",
-    text: "texds123123123t",
+    id: 5,
+    avatar:
+      "https://sun9-82.userapi.com/impf/c850728/v850728240/97bea/b4W__CgjwcI.jpg?size=762x316&quality=96&sign=1e328f3d63295549f2defe81087ebe10&type=album",
+    name: "Yuriy F.",
+    nickname: "@yuriy",
+    text: "Tweet wow! ",
   },
   {
-    avatar: "https://placekitten.com/100/100",
-    name: "Yuriy Faizov",
-    nickname: "@faizov",
-    text: "texds123123123t",
-  },
-  {
-    avatar: "https://placekitten.com/100/100",
-    name: "Yuriy Faizov",
-    nickname: "@faizov",
-    text: "texds123123123t",
-  },
-  {
-    avatar: "https://placekitten.com/100/100",
-    name: "Yuriy Faizov",
-    nickname: "@faizov",
-    text: "texds123123123t",
+    id: 6,
+    avatar:
+      "https://sun9-82.userapi.com/impf/c850728/v850728240/97bea/b4W__CgjwcI.jpg?size=762x316&quality=96&sign=1e328f3d63295549f2defe81087ebe10&type=album",
+    name: "Yuriy F.",
+    nickname: "@yuriy",
+    text: "Tweet wow! Tweet wow! Tweet wow! Tweet wow! Tweet wow! Tweet wow! Tweet wow! Tweet wow! Tweet wow! Tweet wow! Tweet wow! Tweet wow! Tweet wow! Tweet wow! Tweet wow! Tweet wow! ",
   },
 ];
 
@@ -106,7 +104,7 @@ export const Content = () => {
       <div>
         {JsonPosts.map((item) => {
           return (
-            <div style={{ marginTop: 15 }}>
+            <div style={{ marginTop: 15 }} key={item.id}>
               <Separator />
               <div
                 style={{
@@ -117,10 +115,9 @@ export const Content = () => {
                 }}
               >
                 <Avatar
-                  noBorder
-                  size={48}
+                  size={50}
                   src={item.avatar}
-                  style={{ height: "auto", minWidth: 50, marginRight: 12 }}
+                  style={{ minWidth: 50, marginRight: 12 }}
                 />
                 <div>
                   <div style={{ display: "flex", marginBottom: 10 }}>
