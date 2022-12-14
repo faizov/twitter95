@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { MenuList, MenuListItem, Button, Avatar } from "react95";
+import { MenuList, MenuListItem, Button } from "react95";
 import styled from "styled-components";
 
+import { Avatar } from "../customs";
 import { List } from "./config";
 
 import {
@@ -48,10 +49,7 @@ export const LeftMenu = () => {
 
       <Profile onClick={() => setOpen(!open)}>
         <ProfileInfo>
-          <Avatar
-            size={48}
-            src="https://sun9-34.userapi.com/impg/D1QEdA_0uINV_egDZDRcfQJaY9_1ZJMTLIaWiA/TFxJqXvtEuU.jpg?size=1280x960&quality=95&sign=34f202ab6e027220f70eb1e89a267e11&type=album"
-          />
+          <Avatar url="https://sun9-34.userapi.com/impg/D1QEdA_0uINV_egDZDRcfQJaY9_1ZJMTLIaWiA/TFxJqXvtEuU.jpg?size=1280x960&quality=95&sign=34f202ab6e027220f70eb1e89a267e11&type=album" />
           <div>
             <h3>Yuriy F.</h3>
             <p>@faizov</p>

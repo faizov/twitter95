@@ -1,7 +1,19 @@
 import React, { useState } from "react";
-import { Frame, Button, TextInput, Avatar, Separator } from "react95";
+import { Frame, Button, TextInput, Separator } from "react95";
 import styled from "styled-components";
-import { LeftMenu } from "../../components/home/leftMenu";
+
+import { Avatar } from "../customs";
+
+import {
+  FrameStyled,
+  HomeBlock,
+  TweetBlock,
+  TweetButtonBlock,
+  TweetPostBlock,
+  TweetPost,
+  TweetPostInfo,
+} from "./style";
+
 const JsonPosts = [
   {
     id: 1,
@@ -56,29 +68,13 @@ export const Content = () => {
   const [input, setInput] = useState("");
 
   return (
-    <Frame
-      variant="inside"
-      style={{ minWidth: 600, maxWidth: 600, padding: 15 }}
-    >
-      <div
-        style={{
-          height: 30,
-          position: "sticky",
-          top: 0,
-          background: "#c6c6c6",
-          padding: "15px 0",
-        }}
-      >
+    <FrameStyled variant="inside">
+      <HomeBlock>
         <h2>Home</h2>
-      </div>
+      </HomeBlock>
 
-      <div style={{ display: "flex", alignItems: "flex-start" }}>
-        <Avatar
-          noBorder
-          size={48}
-          src="https://placekitten.com/100/100"
-          style={{ height: "auto", marginRight: 12 }}
-        />
+      <TweetBlock>
+        <Avatar url="https://placekitten.com/100/100" />
         <TextInput
           multiline
           variant="flat"
@@ -88,51 +84,34 @@ export const Content = () => {
           value={input}
           fullWidth
         />
-      </div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "end",
-          padding: "12px 0",
-        }}
-      >
+      </TweetBlock>
+      <TweetButtonBlock>
         <Button primary size="sm" disabled={!input}>
           Tweet
         </Button>
-      </div>
+      </TweetButtonBlock>
 
       <div>
         {JsonPosts.map((item) => {
           return (
-            <div style={{ marginTop: 15 }} key={item.id}>
+            <TweetPostBlock key={item.id}>
               <Separator />
-              <div
-                style={{
-                  display: "flex",
-                  marginTop: 15,
-                  alignItems: "start",
-                  wordBreak: "break-word",
-                }}
-              >
-                <Avatar
-                  size={50}
-                  src={item.avatar}
-                  style={{ minWidth: 50, marginRight: 12 }}
-                />
+              <TweetPost>
+                <Avatar url={item.avatar} noBorder={false} />
                 <div>
-                  <div style={{ display: "flex", marginBottom: 10 }}>
-                    <p style={{ marginRight: 5 }}>{item.name}</p>
-                    <span style={{ marginRight: 5 }}>{item.nickname}</span>
-                    <span style={{ marginRight: 5 }}>&#8226;</span>
-                    <span style={{ marginRight: 5 }}>4ч</span>
-                  </div>
+                  <TweetPostInfo>
+                    <p>{item.name}</p>
+                    <span>{item.nickname}</span>
+                    <span>&#8226;</span>
+                    <span>4ч</span>
+                  </TweetPostInfo>
                   <p>{item.text}</p>
                 </div>
-              </div>
-            </div>
+              </TweetPost>
+            </TweetPostBlock>
           );
         })}
       </div>
-    </Frame>
+    </FrameStyled>
   );
 };
