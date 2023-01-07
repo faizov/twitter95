@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { MenuList, MenuListItem, Button } from "react95";
-import styled from "styled-components";
 
 import { Avatar } from "../customs";
 import { List } from "./config";

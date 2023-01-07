@@ -27,7 +27,7 @@ export const TweetButtonBlock = styled.div`
   padding: 12px 0px;
 `;
 
-export const TweetPostBlock = styled.div` 
+export const TweetPostBlock = styled.div`
   margin-top: 15px;
 `;
 
@@ -47,3 +47,4 @@ export const TweetPostInfo = styled.div`
     margin-right: 5px;
   }
 `;
+
