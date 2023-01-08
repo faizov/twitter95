@@ -2,12 +2,13 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { HYDRATE } from "next-redux-wrapper";
 
 interface Tweet {
-  id: string;
+  id: number;
   date: string;
   name: string;
   avatar: string;
   nickname: string;
   text: string;
+  likes: number;
 }
 
 type TweetsResponse = Tweet[];
@@ -33,7 +34,7 @@ export const tweetsApi = createApi({
             ]
           : [{ type: "Tweets", id: "LIST" }],
     }),
-    getTweet: build.query<Tweet, string>({
+    getTweet: build.query<Tweet, number>({
       query: (id) => `/${id}`,
       providesTags: (result, error, id) => [{ type: "Tweets", id }],
     }),
@@ -48,10 +49,33 @@ export const tweetsApi = createApi({
 
       invalidatesTags: [{ type: "Tweets", id: "LIST" }],
     }),
+    likeTweet: build.mutation<Tweet, number>({
+      query: (id) => ({
+        url: `/${id}/like`,
+        method: "PATCH",
+      }),
+      async onQueryStarted(id, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          tweetsApi.util.updateQueryData("getTweet", id, (draft) => {
+            draft.likes += 1;
+          })
+        );
+        
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
+    }),
   }),
 });
 
-export const { useGetTweetsQuery, useGetTweetQuery, useAddTweetMutation } =
-  tweetsApi;
+export const {
+  useGetTweetsQuery,
+  useGetTweetQuery,
+  useAddTweetMutation,
+  useLikeTweetMutation,
+} = tweetsApi;
 
-export const { getTweets, getTweet, addTweet } = tweetsApi.endpoints;
+export const { getTweets, getTweet, addTweet, likeTweet } = tweetsApi.endpoints;

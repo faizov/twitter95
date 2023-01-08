@@ -3,7 +3,10 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { Button } from "react95";
 
-import { useGetTweetQuery } from "../../__data__/tweetsApi";
+import {
+  useGetTweetQuery,
+  useLikeTweetMutation,
+} from "../../__data__/tweetsApi";
 
 import { Avatar } from "../../components/customs";
 
@@ -19,13 +22,18 @@ import {
 const Tweet = () => {
   const router = useRouter();
   const { id } = router.query;
-  console.log("id", id);
-  const result = useGetTweetQuery(typeof id === "string" ? id : "");
+  const result = useGetTweetQuery(Number(id));
   const { data } = result;
+
+  const [likeTweet] = useLikeTweetMutation();
 
   if (!data) {
     return <>No Tweet</>;
   }
+
+  const onClickLike = async () => {
+    await likeTweet(Number(id));
+  };
 
   return (
     <>
@@ -53,7 +61,7 @@ const Tweet = () => {
             </TweetPostInfoText>
             <TweetPostAction>
               <span>{data.date}</span>
-              <Button>Like</Button>
+              <Button onClick={() => onClickLike()}>Like {data.likes}</Button>
             </TweetPostAction>
           </div>
         </TweetPost>
