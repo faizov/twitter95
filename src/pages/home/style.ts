@@ -8,12 +8,12 @@ export const FrameStyled = styled(Frame)`
 `;
 
 export const HomeBlock = styled.div`
-  height: 30px;
   position: sticky;
   top: 0;
+  z-index: 1;
+  height: 60px;
   background: #c6c6c6;
   padding: 10px 0px;
-  z-index: 1;
 `;
 
 export const TweetBlock = styled.div`
@@ -23,8 +23,13 @@ export const TweetBlock = styled.div`
 
 export const TweetButtonBlock = styled.div`
   display: flex;
+  align-items: center;
   justify-content: end;
   padding: 12px 0px;
+
+  span {
+    margin-right: 15px;
+  }
 `;
 
 export const TweetPostBlock = styled.div`
@@ -47,4 +52,3 @@ export const TweetPostInfo = styled.div`
     margin-right: 5px;
   }
 `;
-

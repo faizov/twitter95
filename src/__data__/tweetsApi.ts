@@ -1,8 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { HYDRATE } from "next-redux-wrapper";
 
+import { api } from "./api";
+
 interface Tweet {
   id: number;
+  authorId: string;
   date: string;
   name: string;
   avatar: string;
@@ -13,19 +16,10 @@ interface Tweet {
 
 type TweetsResponse = Tweet[];
 
-export const tweetsApi = createApi({
-  baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:3001/tweets",
-  }),
-  extractRehydrationInfo(action, { reducerPath }) {
-    if (action.type === HYDRATE) {
-      return action.payload[reducerPath];
-    }
-  },
-  tagTypes: ["Tweets"],
+export const tweetsApi = api.injectEndpoints({
   endpoints: (build) => ({
     getTweets: build.query<TweetsResponse, void>({
-      query: () => "/",
+      query: () => "tweets",
       providesTags: (result) =>
         result
           ? [
@@ -35,13 +29,13 @@ export const tweetsApi = createApi({
           : [{ type: "Tweets", id: "LIST" }],
     }),
     getTweet: build.query<Tweet, number>({
-      query: (id) => `/${id}`,
+      query: (id) => `tweets/${id}`,
       providesTags: (result, error, id) => [{ type: "Tweets", id }],
     }),
     addTweet: build.mutation<Tweet, Partial<Tweet>>({
       query(body) {
         return {
-          url: `add`,
+          url: `/tweets/add`,
           method: "POST",
           body,
         };
@@ -51,7 +45,7 @@ export const tweetsApi = createApi({
     }),
     likeTweet: build.mutation<Tweet, number>({
       query: (id) => ({
-        url: `/${id}/like`,
+        url: `tweets/${id}/like`,
         method: "PATCH",
       }),
       async onQueryStarted(id, { dispatch, queryFulfilled }) {
@@ -60,7 +54,7 @@ export const tweetsApi = createApi({
             draft.likes += 1;
           })
         );
-        
+
         try {
           await queryFulfilled;
         } catch {
@@ -72,10 +66,14 @@ export const tweetsApi = createApi({
 });
 
 export const {
-  useGetTweetsQuery,
-  useGetTweetQuery,
   useAddTweetMutation,
+  useGetTweetQuery,
+  useGetTweetsQuery,
+  useLazyGetTweetQuery,
+  useLazyGetTweetsQuery,
   useLikeTweetMutation,
 } = tweetsApi;
 
-export const { getTweets, getTweet, addTweet, likeTweet } = tweetsApi.endpoints;
+export const {
+  endpoints: { addTweet, getTweet, getTweets, likeTweet },
+} = tweetsApi;

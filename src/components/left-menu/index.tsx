@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { MenuList, MenuListItem, Button } from "react95";
+import { useDispatch, useSelector } from "react-redux";
+import { MenuList, MenuListItem } from "react95";
+
+import {
+  removeCredentials,
+  selectCurrentUser,
+} from "../../__data__/auth/authSliced";
 
 import { Avatar } from "../customs";
 import { List } from "./config";
@@ -13,10 +19,18 @@ import {
 } from "./style";
 
 import Link from "next/link";
+import { useAuth } from "../../hooks/useAuth";
 
 export const LeftMenu = () => {
+  const dispatch = useDispatch();
+  const user = useSelector(selectCurrentUser);
   const [open, setOpen] = useState(false);
-
+  // const { user } = useAuth();
+  // console.log("user", user);
+  const logoutClick = () => {
+    dispatch(removeCredentials());
+  };
+  // console.log("LeftMenu user", user);
   return (
     <Wrapper>
       <div>
@@ -48,9 +62,9 @@ export const LeftMenu = () => {
 
       <Profile onClick={() => setOpen(!open)}>
         <ProfileInfo>
-          <Avatar url="https://sun9-34.userapi.com/impg/D1QEdA_0uINV_egDZDRcfQJaY9_1ZJMTLIaWiA/TFxJqXvtEuU.jpg?size=1280x960&quality=95&sign=34f202ab6e027220f70eb1e89a267e11&type=album" />
+          <Avatar url={user?.photo} />
           <div>
-            <h3>Yuriy F.</h3>
+            <h3>{user?.name}</h3>
             <p>@faizov</p>
           </div>
         </ProfileInfo>
@@ -63,9 +77,10 @@ export const LeftMenu = () => {
                 bottom: "100%",
                 right: "0",
               }}
-              onClick={() => setOpen(false)}
             >
-              <MenuListItem size="sm">Log out @FaizovYuriy</MenuListItem>
+              <MenuListItem size="sm" onClick={() => logoutClick()}>
+                Log out {user?.name}
+              </MenuListItem>
             </MenuList>
           )}
         </div>

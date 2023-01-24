@@ -18,26 +18,38 @@ import {
   TweetPost,
   TweetPostInfo,
 } from "./style";
+import { useAuth } from "../../hooks/useAuth";
 
 export const Content = () => {
   const result = useGetTweetsQuery();
   const { isLoading, error, data } = result;
 
+  const auth = useAuth();
+  const { user } = auth;
+
   const [input, setInput] = useState("");
+  let countInput = 280 - input.length;
+
   const [addTweet, { isLoading: isLoadingAdd }] = useAddTweetMutation();
 
-  const addTweetClick = async (text: string) => {
+  const addTweetClick = async () => {
+    if (input.length > 280) {
+      return <>Error</>;
+    }
     try {
-      const body = {
-        name: "Yuriy Faizov",
-        avatar:
-          "https://sun9-82.userapi.com/impg/WmAMZn8VFvDkr2lspVxJv7735tYG38j2VwewRA/-lI97VXi-CQ.jpg?size=964x726&quality=95&sign=3b9362b1f52f05bc44e3051bc92b1677&type=album",
-        nickname: "YuriyF",
-        text: text,
-      };
-      setInput("");
-      await addTweet(body).unwrap();
-    } catch (error) {}
+      if (user) {
+        const body = {
+          name: user.name,
+          avatar: user.photo,
+          nickname: "YuriyF",
+          text: input,
+        };
+        setInput("");
+        await addTweet(body).unwrap();
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
   };
 
   return (
@@ -47,7 +59,7 @@ export const Content = () => {
       </HomeBlock>
 
       <TweetBlock>
-        <Avatar url="https://placekitten.com/100/100" />
+        <Avatar url={user?.photo ?? ""} />
         <TextInput
           multiline
           variant="flat"
@@ -58,12 +70,15 @@ export const Content = () => {
           fullWidth
         />
       </TweetBlock>
+
       <TweetButtonBlock>
+        <span>{countInput}</span>
+
         <Button
           primary
           size="sm"
           disabled={!input}
-          onClick={() => addTweetClick(input)}
+          onClick={() => addTweetClick()}
         >
           Tweet
         </Button>
@@ -72,20 +87,46 @@ export const Content = () => {
       <div>
         {data &&
           data.map((item) => {
+            const lines = item.text.split("\n");
+            let numBreaks = 0;
+
             return (
-              <Link href={`tweets/${item.id}`}>
+              <Link href={`tweets/${item.id}`} key={item.id}>
                 <TweetPostBlock key={item.id}>
                   <Separator />
                   <TweetPost>
-                    <Avatar url={item.avatar} noBorder={false} />
+                    <Link href={`/profile/${item.authorId}`}>
+                      <Avatar
+                        url={
+                          "http://localhost:3001/avatars/" +
+                          item.authorId +
+                          ".png"
+                        }
+                        noBorder={false}
+                      />
+                    </Link>
                     <div>
                       <TweetPostInfo>
                         <p>{item.name}</p>
-                        <span>{item.nickname}</span>
+                        {/* <span>{item.nickname}</span> */}
                         <span>&#8226;</span>
                         <span>{item.date}</span>
                       </TweetPostInfo>
-                      <p>{item.text}</p>
+                      {lines.map((line, index) => {
+                        if (line === "") {
+                          numBreaks++;
+                        } else {
+                          numBreaks = 0;
+                        }
+                        return (
+                          <React.Fragment key={index}>
+                            {line}
+                            {index < lines.length - 1 && numBreaks < 3 && (
+                              <br />
+                            )}
+                          </React.Fragment>
+                        );
+                      })}
                     </div>
                   </TweetPost>
                 </TweetPostBlock>

@@ -1,6 +1,11 @@
 import styled from "styled-components";
 
 export const TweetHeaed = styled.div`
+  position: sticky;
+  height: 64px;
+  background: #c6c6c6;
+  z-index: 1;
+  top: 0;
   display: flex;
   align-items: center;
   margin-bottom: 32px;
@@ -22,6 +27,10 @@ export const TweetPost = styled.div`
   word-break: break-word;
 `;
 
+export const TweetPostInfo = styled.div`
+  width: 100%;
+`;
+
 export const TweetPostInfoAuthor = styled.div`
   margin-bottom: 10px;
   width: 100%;
@@ -39,6 +48,7 @@ export const TweetPostInfoText = styled.div`
 `;
 
 export const TweetPostAction = styled.div`
+  margin-top: 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;

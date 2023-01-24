@@ -31,8 +31,7 @@ export const List = [
   },
   {
     label: "Profile",
-    link: "/",
-    disabled: true,
+    link: `/profile/1`,
   },
   {
     label: "More",

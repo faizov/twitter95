@@ -8,9 +8,7 @@ export const AvatarStyled = styled(Avatar)`
   min-height: ${(props) => (props.size ? props.size : 48)}px;
 
   img {
-    min-width: ${(props) => (props.size ? props.size : 48)}px;
-    min-height: ${(props) => (props.size ? props.size : 48)}px;
     object-fit: cover;
-    border-radius: 35px;
+    border-radius: 50%;
   }
 `;

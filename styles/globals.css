@@ -11,6 +11,7 @@ a {
   text-decoration: none;
 }
 
+
 * {
   box-sizing: border-box;
 }
@@ -23,4 +24,8 @@ a {
     color: white;
     background: black;
   }
+}
+
+h1 {
+  font-size: 30px;
 }
