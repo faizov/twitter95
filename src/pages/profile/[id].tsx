@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { ChangeEvent, useRef } from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Button, Separator } from "react95";
 import { Avatar } from "../../components/customs";
 import { useAuth } from "../../hooks/useAuth";
@@ -17,6 +17,15 @@ const Profile = () => {
   const { data, isLoading } = useGetMeQuery(Number(id), { skip: !id });
 
   const { user } = useAuth();
+
+  const [avatar, setAvatar] = useState(user?.photo);
+
+  // TODO Переделать получение своего профиля
+  useEffect(() => {
+    if (id === "0" && user) {
+      router.push(`${user.id}`);
+    }
+  }, [user]);
 
   const [uploadAvatar] = useUploadAvatarMutation();
 
@@ -80,7 +89,7 @@ const Profile = () => {
             onChange={(e) => changeAvarat(e)}
           />
           <div onClick={() => clickUpload()} style={{ cursor: "pointer" }}>
-            <Avatar url={data?.user?.photo ?? ""} noBorder={false} size={133} />
+            <Avatar url={avatar} noBorder={false} size={133} />
           </div>
           <div style={{ margin: "30px 0" }}>
             <h1>{data?.user?.name}</h1>
@@ -100,12 +109,19 @@ const Profile = () => {
               let numBreaks = 0;
 
               return (
-                <Link href={`/tweets/${item.id}`} key={item.id}>
-                  <TweetPostBlock key={item.id}>
+                <Link href={`/tweets/${item._id}`} key={item._id}>
+                  <TweetPostBlock key={item._id}>
                     <Separator />
                     <TweetPost>
                       <Link href={`/profile/${item.authorId}`}>
-                        <Avatar url={item.avatar} noBorder={false} />
+                        <Avatar
+                          url={
+                            "http://localhost:3001/avatars/" +
+                            item.authorId +
+                            ".png"
+                          }
+                          noBorder={false}
+                        />
                       </Link>
                       <div>
                         <TweetPostInfo>

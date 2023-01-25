@@ -25,12 +25,11 @@ export const LeftMenu = () => {
   const dispatch = useDispatch();
   const user = useSelector(selectCurrentUser);
   const [open, setOpen] = useState(false);
-  // const { user } = useAuth();
-  // console.log("user", user);
+
   const logoutClick = () => {
     dispatch(removeCredentials());
   };
-  // console.log("LeftMenu user", user);
+
   return (
     <Wrapper>
       <div>

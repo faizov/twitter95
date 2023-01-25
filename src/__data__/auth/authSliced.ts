@@ -17,7 +17,8 @@ const slice = createSlice({
     setCredentials: (state, { payload }) => {
       state.user = payload.user;
       state.token = payload.token;
-      // console.log('payload.user', payload.user)
+
+      localStorage.setItem("user", JSON.stringify(payload.user));
       localStorage.setItem("token", payload.token);
     },
     removeCredentials: (state) => {

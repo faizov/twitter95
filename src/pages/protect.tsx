@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 import { Frame } from "react95";
 import styled from "styled-components";
 import localFont from "@next/font/local";
 
-import { setCredentials, selectCurrentUser } from "../__data__/auth/authSliced";
-import jwt_decode from "jwt-decode";
+import { selectCurrentUser } from "../__data__/auth/authSliced";
 
 import { LeftMenu } from "../components/left-menu";
 import { RightMenu } from "../components/right-menu";
@@ -57,14 +56,13 @@ export const Protect = ({ children }: any) => {
 
   useEffect(() => {
     setLoading(false);
-  }, []);
-  console.log("selectUser", selectUser);
-  console.log("auth", user);
+  }, [user]);
+
   return loading ? (
     <FrameStyles variant="window"></FrameStyles>
   ) : (
     <FrameStyles variant="window">
-      {user ? (
+      {selectUser ? (
         <div className={fonts.className}>
           <Wrapper>
             <LeftMenu />

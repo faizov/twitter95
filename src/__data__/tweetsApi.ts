@@ -4,7 +4,7 @@ import { HYDRATE } from "next-redux-wrapper";
 import { api } from "./api";
 
 interface Tweet {
-  id: number;
+  _id: string;
   authorId: string;
   date: string;
   name: string;
@@ -28,7 +28,7 @@ export const tweetsApi = api.injectEndpoints({
             ]
           : [{ type: "Tweets", id: "LIST" }],
     }),
-    getTweet: build.query<Tweet, number>({
+    getTweet: build.query<Tweet, string>({
       query: (id) => `tweets/${id}`,
       providesTags: (result, error, id) => [{ type: "Tweets", id }],
     }),
@@ -43,7 +43,16 @@ export const tweetsApi = api.injectEndpoints({
 
       invalidatesTags: [{ type: "Tweets", id: "LIST" }],
     }),
-    likeTweet: build.mutation<Tweet, number>({
+    deleteTweet: build.mutation<Tweet, string>({
+      query(id) {
+        return {
+          url: `tweets/${id}`,
+          method: "DELETE",
+        };
+      },
+      invalidatesTags: ["Tweets"],
+    }),
+    likeTweet: build.mutation<Tweet, string>({
       query: (id) => ({
         url: `tweets/${id}/like`,
         method: "PATCH",
@@ -71,9 +80,10 @@ export const {
   useGetTweetsQuery,
   useLazyGetTweetQuery,
   useLazyGetTweetsQuery,
+  useDeleteTweetMutation,
   useLikeTweetMutation,
 } = tweetsApi;
 
 export const {
-  endpoints: { addTweet, getTweet, getTweets, likeTweet },
+  endpoints: { addTweet, getTweet, getTweets, deleteTweet, likeTweet },
 } = tweetsApi;

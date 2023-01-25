@@ -1,13 +1,12 @@
 import { useMemo, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import Router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 
 import jwt_decode from "jwt-decode";
 
 import { selectCurrentUser, setCredentials } from "../__data__/auth/authSliced";
 import { useGetMeQuery } from "../__data__/userApi";
-import next from "next/types";
 
 export const useAuth = () => {
   const router = useRouter();
@@ -21,22 +20,18 @@ export const useAuth = () => {
   const { data } = useGetMeQuery(Number(userId), { skip: !userId });
 
   useEffect(() => {
-    const tokenLocal = localStorage.getItem("token");
+    const localToken = localStorage.getItem("token");
+    const localUser = localStorage.getItem("user");
 
-    if (tokenLocal) {
-      const decodedUser: any = jwt_decode(tokenLocal as string);
-      setUserId(decodedUser.id);
+    if (localUser && localToken) {
+      const credentials = {
+        token: localToken,
+        user: JSON.parse(localUser),
+      };
 
-      if (data) {
-        const credentials = {
-          token: tokenLocal,
-          user: data.user,
-        };
-
-        dispatch(setCredentials(credentials));
-      }
+      dispatch(setCredentials(credentials));
     }
-  }, [dispatch, data]);
+  }, [dispatch]);
 
   useEffect(() => {
     if (token) {
@@ -57,42 +52,3 @@ export const useAuth = () => {
 
   return useMemo(() => ({ user }), [user]);
 };
-
-// import { useMemo, useEffect, useState } from "react";
-// import { useDispatch, useSelector } from "react-redux";
-// import jwt_decode from "jwt-decode";
-// import Router from "next/router";
-
-// import { selectCurrentUser, setCredentials } from "../__data__/auth/authSliced";
-
-// export const useAuth = () => {
-//   const [calledPush, setCalledPush] = useState(false);
-//   const dispatch = useDispatch();
-//   const user = useSelector(selectCurrentUser);
-
-//   useEffect(() => {
-//     const token = localStorage.getItem("token");
-//     if (token) {
-//       try {
-//         const decodedUser = jwt_decode(token);
-
-//         const credentials = {
-//           token: token,
-//           user: decodedUser,
-//         };
-
-//         dispatch(setCredentials(credentials));
-//       } catch (error) {
-//         console.log("error", error);
-//       }
-//     } else {
-//       if (calledPush) {
-//         return;
-//       }
-//       Router.push("/");
-//       setCalledPush(true);
-//     }
-//   }, [dispatch]);
-
-//   return useMemo(() => ({ user }), [user]);
-// };

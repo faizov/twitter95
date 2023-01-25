@@ -31,7 +31,7 @@ export const List = [
   },
   {
     label: "Profile",
-    link: `/profile/1`,
+    link: `/profile/0`,
   },
   {
     label: "More",

@@ -32,6 +32,8 @@ export const TweetPostInfo = styled.div`
 `;
 
 export const TweetPostInfoAuthor = styled.div`
+  display: flex;
+  justify-content: space-between;
   margin-bottom: 10px;
   width: 100%;
 

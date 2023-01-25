@@ -91,8 +91,8 @@ export const Content = () => {
             let numBreaks = 0;
 
             return (
-              <Link href={`tweets/${item.id}`} key={item.id}>
-                <TweetPostBlock key={item.id}>
+              <Link href={`tweets/${item._id}`} key={item._id}>
+                <TweetPostBlock key={item._id}>
                   <Separator />
                   <TweetPost>
                     <Link href={`/profile/${item.authorId}`}>
