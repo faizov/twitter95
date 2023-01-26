@@ -19,6 +19,7 @@ import {
   TweetPostInfo,
 } from "./style";
 import { useAuth } from "../../hooks/useAuth";
+import Tweet from "../../components/tweets";
 
 export const Content = () => {
   const result = useGetTweetsQuery();
@@ -87,51 +88,7 @@ export const Content = () => {
       <div>
         {data &&
           data.map((item) => {
-            const lines = item.text.split("\n");
-            let numBreaks = 0;
-
-            return (
-              <Link href={`tweets/${item._id}`} key={item._id}>
-                <TweetPostBlock key={item._id}>
-                  <Separator />
-                  <TweetPost>
-                    <Link href={`/profile/${item.authorId}`}>
-                      <Avatar
-                        url={
-                          "http://localhost:3001/avatars/" +
-                          item.authorId +
-                          ".png"
-                        }
-                        noBorder={false}
-                      />
-                    </Link>
-                    <div>
-                      <TweetPostInfo>
-                        <p>{item.name}</p>
-                        {/* <span>{item.nickname}</span> */}
-                        <span>&#8226;</span>
-                        <span>{item.date}</span>
-                      </TweetPostInfo>
-                      {lines.map((line, index) => {
-                        if (line === "") {
-                          numBreaks++;
-                        } else {
-                          numBreaks = 0;
-                        }
-                        return (
-                          <React.Fragment key={index}>
-                            {line}
-                            {index < lines.length - 1 && numBreaks < 3 && (
-                              <br />
-                            )}
-                          </React.Fragment>
-                        );
-                      })}
-                    </div>
-                  </TweetPost>
-                </TweetPostBlock>
-              </Link>
-            );
+            return <Tweet item={item} />;
           })}
       </div>
     </>

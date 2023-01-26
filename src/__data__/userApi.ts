@@ -13,25 +13,34 @@ export const userApi = api.injectEndpoints({
   endpoints: (build) => ({
     getMe: build.query<UserResponse, number>({
       query: (id) => `user/${id}`,
-      // providesTags: (result, error, id) => [{ type: "User", id }],
+      providesTags: (result, error, id) => [{ type: "User", id }],
     }),
     uploadAvatar: build.mutation<UserResponse, Partial<UserData>>({
       query(body) {
         return {
           url: `/user/uploadavatar`,
           method: "POST",
-          credentials: "include",
           body,
         };
       },
-
-      invalidatesTags: [{ type: "User", id: "LIST" }],
+      invalidatesTags: ["User"],
+    }),
+    edit: build.mutation<UserResponse, Partial<UserData>>({
+      query(body) {
+        return {
+          url: `/user/edit`,
+          method: "PUT",
+          body,
+        };
+      },
+      invalidatesTags: ["User"],
     }),
   }),
 });
 
-export const { useGetMeQuery, useUploadAvatarMutation } = userApi;
+export const { useGetMeQuery, useUploadAvatarMutation, useEditMutation } =
+  userApi;
 
 export const {
-  endpoints: { getMe, uploadAvatar },
+  endpoints: { getMe, uploadAvatar, edit },
 } = userApi;

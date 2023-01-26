@@ -1,5 +1,12 @@
 import styled from "styled-components";
 
+export const Wrapper = styled.div`
+  .profile-header {
+    display: flex;
+    justify-content: space-between;
+  }
+`;
+
 export const TweetHeaed = styled.div`
   position: sticky;
   height: 64px;

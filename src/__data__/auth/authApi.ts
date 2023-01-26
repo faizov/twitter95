@@ -2,11 +2,12 @@ import { HYDRATE } from "next-redux-wrapper";
 import { api } from "../api";
 
 export interface UserData {
+  _id: string;
   id: string;
   email: string;
   photo: string;
-  name?: string;
-  nickName?: string;
+  name: string;
+  bio?: string;
 }
 
 export const authApi = api.injectEndpoints({

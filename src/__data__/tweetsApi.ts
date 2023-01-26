@@ -3,7 +3,7 @@ import { HYDRATE } from "next-redux-wrapper";
 
 import { api } from "./api";
 
-interface Tweet {
+export interface Tweet {
   _id: string;
   authorId: string;
   date: string;

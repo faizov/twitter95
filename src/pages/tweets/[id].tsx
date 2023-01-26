@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { Button, Window, WindowContent, WindowHeader } from "react95";
+import { Button } from "react95";
 
 import {
   useGetTweetQuery,
@@ -20,14 +21,30 @@ import {
   TweetPostInfoText,
   TweetPostAction,
 } from "./style";
-import { useSelector } from "react-redux";
+
 import { selectCurrentUser } from "../../__data__/auth/authSliced";
 
 const Tweet = () => {
   const router = useRouter();
   const { id } = router.query;
-  const result = useGetTweetQuery(id);
+  const result = useGetTweetQuery(id, { skip: !id });
   const { data, isLoading } = result;
+
+  const [text, setText] = useState("");
+
+  useEffect(() => {
+    if (data) {
+      const regex = /(#\w+)/g;
+      const formattedText = data.text.replace(
+        regex,
+        (match: string) =>
+          `<span style="color:rgb(54 128 178)">${match}</span> `
+      );
+
+      setText(formattedText);
+    }
+  }, [data]);
+
   const user = useSelector(selectCurrentUser);
 
   const [deleteTweet] = useDeleteTweetMutation();
@@ -36,6 +53,9 @@ const Tweet = () => {
   if (!data || isLoading) {
     return <div>Loading</div>;
   }
+
+  const lines = text?.split("\n");
+  let numBreaks = 0;
 
   const onClickDeleteTweet = async () => {
     await deleteTweet(id)
@@ -49,23 +69,6 @@ const Tweet = () => {
 
   const onClickLike = async () => {
     await likeTweet(id);
-  };
-
-  const lines = data.text?.split("\n");
-  let numBreaks = 0;
-
-  const AlertWindow = () => {
-    return (
-      <Window className="window">
-        <WindowHeader active={false} className="window-title">
-          <span>not-active.exe</span>
-          <Button>
-            <span className="close-icon" />
-          </Button>
-        </WindowHeader>
-        <WindowContent>I am not active</WindowContent>
-      </Window>
-    );
   };
 
   return (
@@ -106,7 +109,7 @@ const Tweet = () => {
             </TweetPostInfoAuthor>
 
             <TweetPostInfoText>
-              {lines?.map((line, index) => {
+              {lines?.map((line: string, index: number) => {
                 if (line === "") {
                   numBreaks++;
                 } else {
@@ -114,7 +117,7 @@ const Tweet = () => {
                 }
                 return (
                   <React.Fragment key={index}>
-                    {line}
+                    <span dangerouslySetInnerHTML={{ __html: line }} />
                     {index < lines.length - 1 && numBreaks < 3 && <br />}
                   </React.Fragment>
                 );
@@ -127,8 +130,6 @@ const Tweet = () => {
           </TweetPostInfo>
         </TweetPost>
       </TweetPostBlock>
-
-      {/* <AlertWindow /> */}
     </>
   );
 };

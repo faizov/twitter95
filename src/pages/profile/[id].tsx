@@ -3,11 +3,13 @@ import { useRouter } from "next/router";
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Button, Separator } from "react95";
 import { Avatar } from "../../components/customs";
+import Tweet from "../../components/tweets";
 import { useAuth } from "../../hooks/useAuth";
 import { useGetMeQuery, useUploadAvatarMutation } from "../../__data__/userApi";
 import { TweetPost, TweetPostBlock, TweetPostInfo } from "../home/style";
+import { EditModal } from "./edit";
 
-import { TweetHeaed } from "./style";
+import { TweetHeaed, Wrapper } from "./style";
 
 const Profile = () => {
   const inputFileRef = useRef<HTMLInputElement>(null);
@@ -19,6 +21,8 @@ const Profile = () => {
   const { user } = useAuth();
 
   const [avatar, setAvatar] = useState(user?.photo);
+
+  const [openModal, setOpenModal] = useState(false);
 
   // TODO Переделать получение своего профиля
   useEffect(() => {
@@ -55,8 +59,15 @@ const Profile = () => {
     return <div>Loading...</div>;
   }
 
+  const clickOpenModal = () => {
+    setOpenModal(true);
+  };
+
   return (
-    <div>
+    <Wrapper>
+      {openModal && data ? (
+        <EditModal user={data.user} setOpenModal={setOpenModal} />
+      ) : null}
       <TweetHeaed>
         <Button square variant="thin" onClick={() => router.back()}>
           <span role="img" aria-label="recycle">
@@ -69,8 +80,8 @@ const Profile = () => {
           <p>{data?.tweets.length} Tweets</p>
         </div>
       </TweetHeaed>
-      <div style={{ position: "relative" }}>
-        <img
+      <div className="profile-header">
+        {/* <img
           src=""
           alt=""
           style={{
@@ -79,81 +90,29 @@ const Profile = () => {
             height: "200px",
             objectFit: "cover",
           }}
-        />
-        {/* TODO: Upload Image */}
-        <div style={{ position: "absolute", top: "60%" }}>
-          <input
-            type="file"
-            style={{ display: "none" }}
-            ref={inputFileRef}
-            onChange={(e) => changeAvarat(e)}
-          />
-          <div onClick={() => clickUpload()} style={{ cursor: "pointer" }}>
-            <Avatar url={avatar} noBorder={false} size={133} />
-          </div>
-          <div style={{ margin: "30px 0" }}>
-            <h1>{data?.user?.name}</h1>
-          </div>
-        </div>
+        /> */}
+
+        <Avatar url={data?.user?.photo} noBorder={false} size={133} />
+
         {user?.id === data?.user?.id ? (
-          <div style={{ position: "absolute", right: "0" }}>
-            <Button>Edit profile</Button>
+          <div>
+            <Button onClick={() => clickOpenModal()}>Edit profile</Button>
           </div>
         ) : null}
       </div>
-      <div style={{ marginTop: "20%" }}>
+      <br />
+      <h1>{data?.user?.name}</h1>
+      <br />
+      {data?.user.bio ? <p>{data?.user.bio}</p> : null}
+      <div>А
         <div>
           {data &&
-            data?.tweets?.map((item: any) => {
-              const lines = item.text.split("\n");
-              let numBreaks = 0;
-
-              return (
-                <Link href={`/tweets/${item._id}`} key={item._id}>
-                  <TweetPostBlock key={item._id}>
-                    <Separator />
-                    <TweetPost>
-                      <Link href={`/profile/${item.authorId}`}>
-                        <Avatar
-                          url={
-                            "http://localhost:3001/avatars/" +
-                            item.authorId +
-                            ".png"
-                          }
-                          noBorder={false}
-                        />
-                      </Link>
-                      <div>
-                        <TweetPostInfo>
-                          <p>{item.name}</p>
-                          <span>{item.nickname}</span>
-                          <span>&#8226;</span>
-                          <span>{item.date}</span>
-                        </TweetPostInfo>
-                        {lines.map((line: string, index: number) => {
-                          if (line === "") {
-                            numBreaks++;
-                          } else {
-                            numBreaks = 0;
-                          }
-                          return (
-                            <React.Fragment key={index}>
-                              {line}
-                              {index < lines.length - 1 && numBreaks < 3 && (
-                                <br />
-                              )}
-                            </React.Fragment>
-                          );
-                        })}
-                      </div>
-                    </TweetPost>
-                  </TweetPostBlock>
-                </Link>
-              );
+            data?.tweets?.map((item) => {
+              return <Tweet item={item} />;
             })}
         </div>
       </div>
-    </div>
+    </Wrapper>
   );
 };
 
