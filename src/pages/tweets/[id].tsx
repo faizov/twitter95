@@ -125,7 +125,7 @@ const Tweet = () => {
             </TweetPostInfoText>
             <TweetPostAction>
               <span>{data.date}</span>
-              <Button onClick={() => onClickLike()}>Like {data.likes}</Button>
+              <Button onClick={() => onClickLike()}>💙 {data.likes}</Button>
             </TweetPostAction>
           </TweetPostInfo>
         </TweetPost>

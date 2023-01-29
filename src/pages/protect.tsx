@@ -11,6 +11,7 @@ import { LeftMenu } from "../components/left-menu";
 import { RightMenu } from "../components/right-menu";
 import Auth from "./auth";
 import { useAuth } from "../hooks/useAuth";
+import { FooterMenu } from "../components/AppBar";
 
 const fonts = localFont({
   src: [
@@ -68,6 +69,7 @@ export const Protect = ({ children }: any) => {
             <LeftMenu />
             <FrameStyled variant="inside">{children}</FrameStyled>
             <RightMenu />
+            {/* <FooterMenu /> */}
           </Wrapper>
         </div>
       ) : (

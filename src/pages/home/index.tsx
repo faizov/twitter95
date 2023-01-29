@@ -46,12 +46,14 @@ export const Content = () => {
           text: input,
         };
         setInput("");
-        await addTweet(body).unwrap();
+        await addTweet(body);
       }
     } catch (error) {
       console.log("error", error);
     }
   };
+
+  console.log("data", data);
 
   return (
     <>
@@ -86,10 +88,9 @@ export const Content = () => {
       </TweetButtonBlock>
 
       <div>
-        {data &&
-          data.map((item) => {
-            return <Tweet item={item} />;
-          })}
+        {data?.map((item) => {
+          return <Tweet item={item} key={item._id} />;
+        })}
       </div>
     </>
   );

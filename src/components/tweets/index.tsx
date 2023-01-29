@@ -39,7 +39,7 @@ const Tweet = ({ item }: TweetRespose) => {
               noBorder={false}
             />
           </Link>
-          <div>
+          <div style={{ width: "100%" }}>
             <TweetPostInfo>
               <p>{item.name}</p>
               <span>&#8226;</span>
@@ -59,6 +59,16 @@ const Tweet = ({ item }: TweetRespose) => {
                 </React.Fragment>
               );
             })}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "end",
+                alignItems: "center",
+                margin: "5px 0",
+              }}
+            >
+              💙 {item.likes}
+            </div>
           </div>
         </TweetPost>
       </TweetPostBlock>

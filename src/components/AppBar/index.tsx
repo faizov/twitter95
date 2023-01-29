@@ -18,7 +18,7 @@ export function FooterMenu() {
   const dispatch = useDispatch();
 
   return (
-    <AppBar position="fixed" style={{ bottom: 0, top: "auto" }}>
+    <AppBar position="fixed" style={{ bottom: 0, top: "auto", right: "auto", maxWidth: "900px" }}>
       <Toolbar style={{ justifyContent: "space-between" }}>
         <div style={{ position: "relative", display: "inline-block" }}>
           <Button
@@ -43,7 +43,13 @@ export function FooterMenu() {
               }}
               onClick={() => setOpen(false)}
             >
-              <Link href={"/profile/0"}>
+              <Link href={"/"}>
+                <MenuListItem>
+                  <span role="img" aria-label="📝">
+                    📝
+                  </span>
+                  Tweets
+                </MenuListItem>
                 <MenuListItem>
                   <span role="img" aria-label="👨‍💻">
                     👨‍💻

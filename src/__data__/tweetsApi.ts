@@ -23,7 +23,7 @@ export const tweetsApi = api.injectEndpoints({
       providesTags: (result) =>
         result
           ? [
-              ...result.map(({ id }) => ({ type: "Tweets" as const, id })),
+              ...result.map(({ _id }) => ({ type: "Tweets" as const, _id })),
               { type: "Tweets", id: "LIST" },
             ]
           : [{ type: "Tweets", id: "LIST" }],

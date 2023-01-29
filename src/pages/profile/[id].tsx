@@ -104,7 +104,7 @@ const Profile = () => {
       <h1>{data?.user?.name}</h1>
       <br />
       {data?.user.bio ? <p>{data?.user.bio}</p> : null}
-      <div>А
+      <div>
         <div>
           {data &&
             data?.tweets?.map((item) => {
