@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { Button } from "react95";
@@ -22,15 +22,16 @@ import {
   TweetPostAction,
 } from "./style";
 
-import { selectCurrentUser } from "../../__data__/auth/authSliced";
+import { useAuth } from "../../hooks/useAuth";
 
 const Tweet = () => {
   const router = useRouter();
   const { id } = router.query;
   const result = useGetTweetQuery(id, { skip: !id });
   const { data, isLoading } = result;
-
+  const dispatch = useDispatch();
   const [text, setText] = useState("");
+  const [likes, setLikes] = useState(0);
 
   useEffect(() => {
     if (data) {
@@ -42,10 +43,12 @@ const Tweet = () => {
       );
 
       setText(formattedText);
+      setLikes(data.likes);
     }
   }, [data]);
 
-  const user = useSelector(selectCurrentUser);
+  // const user = useSelector(selectCurrentUser);
+  const { user } = useAuth();
 
   const [deleteTweet] = useDeleteTweetMutation();
   const [likeTweet] = useLikeTweetMutation();
@@ -125,7 +128,9 @@ const Tweet = () => {
             </TweetPostInfoText>
             <TweetPostAction>
               <span>{data.date}</span>
-              <Button onClick={() => onClickLike()}>💙 {data.likes}</Button>
+              <Button onClick={() => onClickLike()}>
+                {user?.likes?.includes(id) ? "❤️" : "💙"} {likes}
+              </Button>
             </TweetPostAction>
           </TweetPostInfo>
         </TweetPost>

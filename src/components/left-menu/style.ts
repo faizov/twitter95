@@ -2,7 +2,7 @@ import { MenuList, MenuListItem, Button, Avatar } from "react95";
 import styled from "styled-components";
 
 export const Wrapper = styled.div`
-  max-width: 275px;
+  
   width: 100%;
   display: flex;
   flex-direction: column;

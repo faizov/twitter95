@@ -19,7 +19,7 @@ export const userApi = api.injectEndpoints({
       query(body) {
         return {
           url: `/user/uploadavatar`,
-          method: "POST",
+          method: "PUT",
           body,
         };
       },

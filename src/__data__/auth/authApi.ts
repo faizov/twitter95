@@ -5,9 +5,11 @@ export interface UserData {
   _id: string;
   id: string;
   email: string;
-  photo: string;
+  avatar: string;
+  avatarFile: File;
   name: string;
   bio?: string;
+  likes?: string[];
 }
 
 export const authApi = api.injectEndpoints({

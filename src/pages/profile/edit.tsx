@@ -94,21 +94,40 @@ type UserResponse = {
 
 export const EditModal = ({ user, setOpenModal }: UserResponse) => {
   const inputFileRef = useRef<HTMLInputElement>(null);
+
+  const [avatarPreview, setAvatarPreview] = useState(user?.avatar);
+
   const [name, setName] = useState(user?.name);
   const [bio, setBio] = useState(user?.bio);
+  const [avatar, setAvatar] = useState<File>();
+
   const [uploadAvatar] = useUploadAvatarMutation();
   const [edit] = useEditMutation();
   const { _id } = user;
 
-  const clickSaveButton = () => {
+  const clickSaveButton = async () => {
     if (_id && name && bio) {
       edit({ _id, name, bio })
         .unwrap()
         .then((response) => {
           if (response) {
+            localStorage.setItem("user", JSON.stringify(response));
             setOpenModal(false);
           }
         });
+    }
+
+    if (avatar) {
+      const formData = new FormData();
+      const fileName = avatar.name;
+      formData.append("file", avatar);
+      formData.append("fileName", fileName);
+
+      try {
+        await uploadAvatar(formData as any).unwrap();
+      } catch (error) {
+        console.log("error", error);
+      }
     }
   };
 
@@ -121,17 +140,9 @@ export const EditModal = ({ user, setOpenModal }: UserResponse) => {
   const changeAvarat = async (e: ChangeEvent) => {
     const target = e.target as HTMLInputElement;
     const file: File = (target.files as FileList)[0];
-    const fileName = file.name;
 
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("fileName", fileName);
-
-    try {
-      await uploadAvatar(formData as any).unwrap();
-    } catch (error) {
-      console.log("error", error);
-    }
+    setAvatar(file);
+    setAvatarPreview(URL.createObjectURL(file));
   };
 
   return (
@@ -144,7 +155,12 @@ export const EditModal = ({ user, setOpenModal }: UserResponse) => {
           </Button>
         </WindowHeader>
         <Toolbar>
-          <Button variant="menu" size="sm" onClick={() => clickSaveButton()}>
+          <Button
+            variant="menu"
+            size="sm"
+            onClick={() => clickSaveButton()}
+            disabled={!name || !bio}
+          >
             Save
           </Button>
         </Toolbar>
@@ -160,7 +176,7 @@ export const EditModal = ({ user, setOpenModal }: UserResponse) => {
             className="edit-avatar"
             style={{ width: "max-content", cursor: "pointer" }}
           >
-            <Avatar url={user?.photo} noBorder={false} size={133} />
+            <Avatar url={avatarPreview} noBorder={false} size={133} />
           </div>
           <br />
           <br />

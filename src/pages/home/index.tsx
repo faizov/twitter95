@@ -41,7 +41,7 @@ export const Content = () => {
       if (user) {
         const body = {
           name: user.name,
-          avatar: user.photo,
+          avatar: user.avatar,
           nickname: "YuriyF",
           text: input,
         };
@@ -53,8 +53,6 @@ export const Content = () => {
     }
   };
 
-  console.log("data", data);
-
   return (
     <>
       <HomeBlock>
@@ -62,7 +60,7 @@ export const Content = () => {
       </HomeBlock>
 
       <TweetBlock>
-        <Avatar url={user?.photo ?? ""} />
+        <Avatar url={user?.avatar ?? ""} />
         <TextInput
           multiline
           variant="flat"

@@ -57,19 +57,7 @@ export const tweetsApi = api.injectEndpoints({
         url: `tweets/${id}/like`,
         method: "PATCH",
       }),
-      async onQueryStarted(id, { dispatch, queryFulfilled }) {
-        const patchResult = dispatch(
-          tweetsApi.util.updateQueryData("getTweet", id, (draft) => {
-            draft.likes += 1;
-          })
-        );
-
-        try {
-          await queryFulfilled;
-        } catch {
-          patchResult.undo();
-        }
-      },
+      invalidatesTags: ["Tweets"],
     }),
   }),
 });
