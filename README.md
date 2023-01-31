@@ -1,3 +1,9 @@
+Pet project - clone tweitter with react95
+
+![Снимок экрана 2023-01-30 184517](https://user-images.githubusercontent.com/43875549/215760103-92eee327-df43-4715-95bf-746bfe61ad2c.png)
+![Снимок экрана 2023-01-30 184559](https://user-images.githubusercontent.com/43875549/215760116-2ad8f1fa-6b22-49a9-891b-a8762395eac6.png)
+![Снимок экрана 2023-01-30 184622](https://user-images.githubusercontent.com/43875549/215760126-d079f9db-113f-4784-a9d0-58d55e483031.png)
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
