@@ -7,6 +7,7 @@ import Avatar from "../customs/avatar";
 import { TweetPost, TweetPostBlock, TweetPostInfo } from "./style";
 
 import { Tweet } from "../../__data__/tweetsApi";
+import { createHashTags } from "../../utils/createHashTags";
 
 type TweetRespose = {
   item: Tweet;
@@ -14,13 +15,16 @@ type TweetRespose = {
 
 const Tweet = ({ item }: TweetRespose) => {
   const [text, setText] = useState(item.text);
+  const [likes, setLikes] = useState("");
 
   useEffect(() => {
-    const regex = /(#\w+)/g;
-    const formattedText = text.replace(
-      regex,
-      (match: string) => `<span style="color:rgb(54 128 178)">${match}</span> `
-    );
+    const likeIds = localStorage.getItem("ids");
+
+    if (likeIds) {
+      setLikes(likeIds);
+    }
+
+    const formattedText = createHashTags(item.text);
 
     setText(formattedText);
   }, []);
@@ -67,7 +71,7 @@ const Tweet = ({ item }: TweetRespose) => {
                 margin: "5px 0",
               }}
             >
-              💙 {item.likes}
+              {likes.includes(item._id) ? "❤️" : "💙"} {item.likes}
             </div>
           </div>
         </TweetPost>

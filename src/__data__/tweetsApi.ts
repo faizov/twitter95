@@ -50,14 +50,14 @@ export const tweetsApi = api.injectEndpoints({
           method: "DELETE",
         };
       },
-      invalidatesTags: ["Tweets"],
+      invalidatesTags: (result, error, id) => [{ type: 'Tweets', id }],
     }),
     likeTweet: build.mutation<Tweet, string>({
       query: (id) => ({
         url: `tweets/${id}/like`,
         method: "PATCH",
       }),
-      invalidatesTags: ["Tweets"],
+      invalidatesTags: (result, error, id) => [{ type: "Tweets", id }],
     }),
   }),
 });

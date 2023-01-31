@@ -23,10 +23,15 @@ export const useAuth = () => {
     const localToken = localStorage.getItem("token");
     const localUser = localStorage.getItem("user");
 
+    const userLikes = localStorage.getItem("ids")
+      ? JSON.parse(localStorage.getItem("ids") || "")
+      : [];
+
     if (localUser && localToken) {
       const credentials = {
         token: localToken,
         user: JSON.parse(localUser),
+        likes: userLikes,
       };
 
       dispatch(setCredentials(credentials));
@@ -43,6 +48,7 @@ export const useAuth = () => {
         const credentials = {
           token: token,
           user: data.user,
+          likes: data.user.likes,
         };
         dispatch(setCredentials(credentials));
         router.push("/");

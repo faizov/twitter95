@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { Button } from "react95";
+import { Button, Hourglass } from "react95";
 
 import {
   useGetTweetQuery,
@@ -23,45 +22,42 @@ import {
 } from "./style";
 
 import { useAuth } from "../../hooks/useAuth";
+import { createHashTags } from "../../utils/createHashTags";
+import { likeTweetLocal } from "../../utils/likeTweet";
 
 const Tweet = () => {
   const router = useRouter();
   const { id } = router.query;
-  const result = useGetTweetQuery(id, { skip: !id });
-  const { data, isLoading } = result;
-  const dispatch = useDispatch();
+  const result = useGetTweetQuery(String(id), { skip: !id });
+  const { data, isLoading, isError } = result;
   const [text, setText] = useState("");
   const [likes, setLikes] = useState(0);
+  const [likeMe, setLikeMe] = useState(false);
 
   useEffect(() => {
     if (data) {
-      const regex = /(#\w+)/g;
-      const formattedText = data.text.replace(
-        regex,
-        (match: string) =>
-          `<span style="color:rgb(54 128 178)">${match}</span> `
-      );
+      const formattedText = createHashTags(data.text);
 
       setText(formattedText);
       setLikes(data.likes);
     }
+
+    const likeIds = localStorage.getItem("ids");
+    if (likeIds && id) {
+      setLikeMe(likeIds.includes(String(id)));
+    }
   }, [data]);
 
-  // const user = useSelector(selectCurrentUser);
   const { user } = useAuth();
 
   const [deleteTweet] = useDeleteTweetMutation();
   const [likeTweet] = useLikeTweetMutation();
 
-  if (!data || isLoading) {
-    return <div>Loading</div>;
-  }
-
   const lines = text?.split("\n");
   let numBreaks = 0;
 
   const onClickDeleteTweet = async () => {
-    await deleteTweet(id)
+    await deleteTweet(String(id))
       .unwrap()
       .then((res) => {
         if (res) {
@@ -71,8 +67,17 @@ const Tweet = () => {
   };
 
   const onClickLike = async () => {
-    await likeTweet(id);
+    await likeTweet(String(id));
+    likeTweetLocal(String(id));
   };
+
+  if (isLoading) {
+    return <Hourglass size={32} />;
+  }
+
+  if (isError) {
+    return router.push("/");
+  }
 
   return (
     <>
@@ -85,55 +90,57 @@ const Tweet = () => {
         Tweet
       </TweetHeaed>
       <TweetPostBlock>
-        <TweetPost>
-          <Link href={`/profile/${data.authorId}`}>
-            <Avatar
-              url={"http://localhost:3001/avatars/" + data.authorId + ".png"}
-              noBorder={false}
-            />
-          </Link>
-          <TweetPostInfo>
-            <TweetPostInfoAuthor>
-              <Link href={`/profile/${data.authorId}`}>
-                <div>
-                  <p>{data.name}</p>
-                  <span>@{data.nickname}</span>
-                </div>
-              </Link>
-              {data.authorId === user?.id ? (
-                <div>
-                  <Button square onClick={() => onClickDeleteTweet()}>
-                    <span role="img" aria-label="recycle">
-                      ♻︎
-                    </span>
-                  </Button>
-                </div>
-              ) : null}
-            </TweetPostInfoAuthor>
+        {data ? (
+          <TweetPost>
+            <Link href={`/profile/${data.authorId}`}>
+              <Avatar
+                url={"http://localhost:3001/avatars/" + data.authorId + ".png"}
+                noBorder={false}
+              />
+            </Link>
+            <TweetPostInfo>
+              <TweetPostInfoAuthor>
+                <Link href={`/profile/${data.authorId}`}>
+                  <div>
+                    <p>{data.name}</p>
+                    <span>@{data.nickname}</span>
+                  </div>
+                </Link>
+                {data.authorId === user?.id ? (
+                  <div>
+                    <Button square onClick={() => onClickDeleteTweet()}>
+                      <span role="img" aria-label="recycle">
+                        ♻︎
+                      </span>
+                    </Button>
+                  </div>
+                ) : null}
+              </TweetPostInfoAuthor>
 
-            <TweetPostInfoText>
-              {lines?.map((line: string, index: number) => {
-                if (line === "") {
-                  numBreaks++;
-                } else {
-                  numBreaks = 0;
-                }
-                return (
-                  <React.Fragment key={index}>
-                    <span dangerouslySetInnerHTML={{ __html: line }} />
-                    {index < lines.length - 1 && numBreaks < 3 && <br />}
-                  </React.Fragment>
-                );
-              })}
-            </TweetPostInfoText>
-            <TweetPostAction>
-              <span>{data.date}</span>
-              <Button onClick={() => onClickLike()}>
-                {user?.likes?.includes(id) ? "❤️" : "💙"} {likes}
-              </Button>
-            </TweetPostAction>
-          </TweetPostInfo>
-        </TweetPost>
+              <TweetPostInfoText>
+                {lines?.map((line: string, index: number) => {
+                  if (line === "") {
+                    numBreaks++;
+                  } else {
+                    numBreaks = 0;
+                  }
+                  return (
+                    <React.Fragment key={index}>
+                      <span dangerouslySetInnerHTML={{ __html: line }} />
+                      {index < lines.length - 1 && numBreaks < 3 && <br />}
+                    </React.Fragment>
+                  );
+                })}
+              </TweetPostInfoText>
+              <TweetPostAction>
+                <span>{data.date}</span>
+                <Button onClick={() => onClickLike()}>
+                  {likeMe ? "❤️" : "💙"} {likes}
+                </Button>
+              </TweetPostAction>
+            </TweetPostInfo>
+          </TweetPost>
+        ) : null}
       </TweetPostBlock>
     </>
   );

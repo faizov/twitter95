@@ -5,6 +5,7 @@ import type { RootState } from "../store";
 type AuthState = {
   user: UserData | null;
   token: string | null;
+  likes: [];
 };
 
 const slice = createSlice({
@@ -17,8 +18,10 @@ const slice = createSlice({
     setCredentials: (state, { payload }) => {
       state.user = payload.user;
       state.token = payload.token;
+      state.likes = payload.likes;
 
       localStorage.setItem("user", JSON.stringify(payload.user));
+      localStorage.setItem("ids", JSON.stringify(payload.likes));
       localStorage.setItem("token", payload.token);
     },
     removeCredentials: (state) => {

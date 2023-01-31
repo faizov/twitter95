@@ -15,14 +15,6 @@ export const RightMenu = () => {
           fullWidth
         />
       </SearchBlock>
-
-      <div style={{ padding: 15, width: "100%", position: "sticky", top: 70 }}>
-        <img
-          width={"100%"}
-          src="https://www.meme-arsenal.com/memes/66c9a6b1ce6b6226ef697ef7ea99ebdf.jpg"
-          alt=""
-        />
-      </div>
     </FrameStyled>
   );
 };

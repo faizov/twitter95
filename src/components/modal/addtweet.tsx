@@ -15,15 +15,10 @@ import {
   WindowHeader,
 } from "react95";
 import styled from "styled-components";
-import { UserData } from "../../__data__/auth/authApi";
 
-import { Avatar } from "../../components/customs";
-import {
-  useUploadAvatarMutation,
-  useEditMutation,
-} from "../../__data__/userApi";
-import { addTweet, useAddTweetMutation } from "../../__data__/tweetsApi";
+import { useAddTweetMutation } from "../../__data__/tweetsApi";
 import { useAuth } from "../../hooks/useAuth";
+import EmojiPicker from "emoji-picker-react";
 
 const Wrapper = styled.div`
   position: fixed;
@@ -99,7 +94,9 @@ export const AddTweetModal = ({ setOpenModal }: Responce) => {
   const [input, setInput] = useState("");
   let countInput = 280 - input.length;
 
-  const [addTweet, { isLoading: isLoadingAdd }] = useAddTweetMutation();
+  const ref = useRef<HTMLInputElement>(null);
+
+  const [addTweet] = useAddTweetMutation();
 
   const addTweetClick = async () => {
     if (input.length > 280) {
@@ -114,11 +111,29 @@ export const AddTweetModal = ({ setOpenModal }: Responce) => {
           text: input,
         };
         setInput("");
-        setOpenModal(false)
+        setOpenModal(false);
         await addTweet(body);
       }
     } catch (error) {
       console.log("error", error);
+    }
+  };
+
+  const onEmojiClick = (emojiObject: any) => {
+    if (ref.current) {
+      const cursor = ref.current.selectionStart;
+
+      if (cursor) {
+        const text =
+          input.slice(0, cursor) + emojiObject.emoji + input.slice(cursor);
+        setInput(text);
+
+        const newCursor = cursor + emojiObject.emoji.length;
+        setTimeout(
+          () => ref.current.setSelectionRange(newCursor, newCursor),
+          10
+        );
+      }
     }
   };
 
@@ -131,16 +146,7 @@ export const AddTweetModal = ({ setOpenModal }: Responce) => {
             <span className="close-icon" />
           </Button>
         </WindowHeader>
-        <Toolbar>
-          <Button
-            variant="menu"
-            size="sm"
-            disabled={!input}
-            onClick={() => addTweetClick()}
-          >
-            Add tweet
-          </Button>
-        </Toolbar>
+
         <WindowContent>
           <TextInput
             multiline
@@ -148,10 +154,21 @@ export const AddTweetModal = ({ setOpenModal }: Responce) => {
             rows={7}
             fullWidth
             placeholder="What's happening?"
-            maxLength={200}
+            maxLength={280}
             onChange={(e) => setInput(e.target.value)}
             value={input}
+            ref={ref}
           />
+
+          <EmojiPicker
+            autoFocusSearch={false}
+            onEmojiClick={onEmojiClick}
+            lazyLoadEmojis={true}
+          />
+
+          <Button disabled={!input} onClick={() => addTweetClick()}>
+            Add tweet
+          </Button>
         </WindowContent>
       </Window>
     </Wrapper>
