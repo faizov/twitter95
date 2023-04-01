@@ -12,13 +12,29 @@ import {
   Toolbar,
 } from "react95";
 import { removeCredentials } from "../../__data__/auth/authSliced";
+import { Avatar } from "../customs";
+import { useAuth } from "../../hooks/useAuth";
+import { AddTweetModal } from "../modal/addtweet";
 
 export function FooterMenu() {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
 
+  const { user } = useAuth();
+
+  const [openModal, setOpenModal] = useState(false);
+
+  const [openModalAddTweet, setOpenModalAddTweet] = useState(false);
+
+  const clickOpenModalAddTweet = () => {
+    setOpenModalAddTweet(!openModalAddTweet);
+  };
+
   return (
-    <AppBar position="fixed" style={{ bottom: 0, top: "auto", right: "auto", maxWidth: "900px" }}>
+    <AppBar
+      position="fixed"
+      style={{ bottom: 0, top: "auto", right: "auto", maxWidth: "700px" }}
+    >
       <Toolbar style={{ justifyContent: "space-between" }}>
         <div style={{ position: "relative", display: "inline-block" }}>
           <Button
@@ -43,6 +59,12 @@ export function FooterMenu() {
               }}
               onClick={() => setOpen(false)}
             >
+              <MenuListItem onClick={() => clickOpenModalAddTweet()}>
+                <span role="img" aria-label="✏️">
+                  ✏️
+                </span>
+                Add
+              </MenuListItem>
               <Link href={"/"}>
                 <MenuListItem>
                   <span role="img" aria-label="📝">
@@ -50,13 +72,14 @@ export function FooterMenu() {
                   </span>
                   Tweets
                 </MenuListItem>
+              </Link>
+              <Link href={"/profile/0"}>
                 <MenuListItem>
-                  <span role="img" aria-label="👨‍💻">
-                    👨‍💻
-                  </span>
+                  <Avatar url={user?.avatar ?? ""} size={24} />
                   Profile
                 </MenuListItem>
               </Link>
+
               <Separator />
               <MenuListItem onClick={() => dispatch(removeCredentials())}>
                 <span role="img" aria-label="🔙">
@@ -66,6 +89,10 @@ export function FooterMenu() {
               </MenuListItem>
             </MenuList>
           )}
+
+          {openModalAddTweet ? (
+            <AddTweetModal setOpenModal={setOpenModalAddTweet} />
+          ) : null}
         </div>
 
         <TextInput placeholder="Search..." width={150} />

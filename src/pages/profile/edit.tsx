@@ -22,6 +22,7 @@ import {
   useUploadAvatarMutation,
   useEditMutation,
 } from "../../__data__/userApi";
+import { Input } from "../../components/input";
 
 const Wrapper = styled.div`
   position: fixed;
@@ -85,6 +86,21 @@ const Wrapper = styled.div`
     line-height: 31px;
     padding-left: 0.25rem;
   }
+
+  .edit-avatar {
+    width: max-content;
+    cursor: pointer;
+  }
+
+  .edit-avatar:hover {
+    transition: 0.3s;
+    filter: grayscale(80%);
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: flex-end;
+  }
 `;
 
 type UserResponse = {
@@ -147,23 +163,13 @@ export const EditModal = ({ user, setOpenModal }: UserResponse) => {
 
   return (
     <Wrapper>
-      <Window resizable className="window">
+      <Window className="window">
         <WindowHeader className="window-title">
           <span>Edit.exe</span>
           <Button onClick={() => setOpenModal(false)}>
             <span className="close-icon" />
           </Button>
         </WindowHeader>
-        <Toolbar>
-          <Button
-            variant="menu"
-            size="sm"
-            onClick={() => clickSaveButton()}
-            disabled={!name || !bio}
-          >
-            Save
-          </Button>
-        </Toolbar>
         <WindowContent>
           <input
             type="file"
@@ -171,32 +177,39 @@ export const EditModal = ({ user, setOpenModal }: UserResponse) => {
             ref={inputFileRef}
             onChange={(e) => changeAvarat(e)}
           />
-          <div
-            onClick={() => clickUpload()}
-            className="edit-avatar"
-            style={{ width: "max-content", cursor: "pointer" }}
-          >
+          <div onClick={() => clickUpload()} className="edit-avatar">
             <Avatar url={avatarPreview} noBorder={false} size={133} />
           </div>
           <br />
           <br />
-          <TextInput
-            value={name}
+          <Input
             placeholder="Name"
-            fullWidth
-            onChange={(e) => setName(e.target.value)}
+            state={name}
+            setState={setName}
             maxLength={30}
           />
           <br />
-          <TextInput
+          <Input
             multiline
             rows={4}
             fullWidth
             placeholder="Bio"
-            defaultValue={bio}
-            onChange={(e) => setBio(e.target.value)}
+            state={bio}
+            setState={setBio}
             maxLength={200}
           />
+
+          <br />
+
+          <div className="buttons">
+            <Button
+              size="sm"
+              onClick={() => clickSaveButton()}
+              disabled={!name || !bio}
+            >
+              Save
+            </Button>
+          </div>
         </WindowContent>
       </Window>
     </Wrapper>

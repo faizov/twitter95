@@ -2,6 +2,7 @@ import React, {
   ChangeEvent,
   Dispatch,
   SetStateAction,
+  useEffect,
   useRef,
   useState,
 } from "react";
@@ -18,7 +19,8 @@ import styled from "styled-components";
 
 import { useAddTweetMutation } from "../../__data__/tweetsApi";
 import { useAuth } from "../../hooks/useAuth";
-import EmojiPicker from "emoji-picker-react";
+import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
+import { Input } from "../input";
 
 const Wrapper = styled.div`
   position: fixed;
@@ -69,8 +71,8 @@ const Wrapper = styled.div`
     min-height: 200px;
     position: absolute;
     left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    top: 40%;
+    transform: translate(-60%, -50%);
   }
   .window:nth-child(2) {
     margin: 2rem;
@@ -93,8 +95,6 @@ export const AddTweetModal = ({ setOpenModal }: Responce) => {
   const { user } = auth;
   const [input, setInput] = useState("");
   let countInput = 280 - input.length;
-
-  const ref = useRef<HTMLInputElement>(null);
 
   const [addTweet] = useAddTweetMutation();
 
@@ -119,24 +119,6 @@ export const AddTweetModal = ({ setOpenModal }: Responce) => {
     }
   };
 
-  const onEmojiClick = (emojiObject: any) => {
-    if (ref.current) {
-      const cursor = ref.current.selectionStart;
-
-      if (cursor) {
-        const text =
-          input.slice(0, cursor) + emojiObject.emoji + input.slice(cursor);
-        setInput(text);
-
-        const newCursor = cursor + emojiObject.emoji.length;
-        setTimeout(
-          () => ref.current.setSelectionRange(newCursor, newCursor),
-          10
-        );
-      }
-    }
-  };
-
   return (
     <Wrapper>
       <Window resizable className="window">
@@ -148,27 +130,30 @@ export const AddTweetModal = ({ setOpenModal }: Responce) => {
         </WindowHeader>
 
         <WindowContent>
-          <TextInput
+          <Input
+            state={input}
+            setState={setInput}
             multiline
-            variant="flat"
             rows={7}
             fullWidth
             placeholder="What's happening?"
             maxLength={280}
-            onChange={(e) => setInput(e.target.value)}
-            value={input}
-            ref={ref}
           />
-
-          <EmojiPicker
-            autoFocusSearch={false}
-            onEmojiClick={onEmojiClick}
-            lazyLoadEmojis={true}
-          />
-
-          <Button disabled={!input} onClick={() => addTweetClick()}>
-            Add tweet
-          </Button>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "end",
+              marginTop: 20,
+              position: "relative",
+            }}
+          >
+            <div>
+              <span style={{ marginRight: 15 }}>{countInput}</span>
+              <Button disabled={!input} onClick={() => addTweetClick()}>
+                Add tweet
+              </Button>
+            </div>
+          </div>
         </WindowContent>
       </Window>
     </Wrapper>

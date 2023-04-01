@@ -35,7 +35,7 @@ export const tweetsApi = api.injectEndpoints({
     addTweet: build.mutation<Tweet, Partial<Tweet>>({
       query(body) {
         return {
-          url: `/tweets/add`,
+          url: `/tweets`,
           method: "POST",
           body,
         };
@@ -50,7 +50,7 @@ export const tweetsApi = api.injectEndpoints({
           method: "DELETE",
         };
       },
-      invalidatesTags: (result, error, id) => [{ type: 'Tweets', id }],
+      invalidatesTags: (result, error, id) => [{ type: "Tweets", id }],
     }),
     likeTweet: build.mutation<Tweet, string>({
       query: (id) => ({

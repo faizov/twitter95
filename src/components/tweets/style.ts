@@ -45,7 +45,6 @@ export const TweetPost = styled.div`
 
 export const TweetPostInfo = styled.div`
   display: flex;
-  margin-top: 10px;
 
   p,
   span {

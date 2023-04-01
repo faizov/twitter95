@@ -25,10 +25,16 @@ export const TweetButtonBlock = styled.div`
   display: flex;
   align-items: center;
   justify-content: end;
+  margin-left: 60px;
   padding: 12px 0px;
 
   span {
     margin-right: 15px;
+  }
+
+  .button {
+    display: flex;
+    align-items: center;
   }
 `;
 

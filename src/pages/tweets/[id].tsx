@@ -51,7 +51,7 @@ const Tweet = () => {
   const { user } = useAuth();
 
   const [deleteTweet] = useDeleteTweetMutation();
-  const [likeTweet] = useLikeTweetMutation();
+  const [likeTweet, { isLoading: isLoadingLike }] = useLikeTweetMutation();
 
   const lines = text?.split("\n");
   let numBreaks = 0;
@@ -103,7 +103,7 @@ const Tweet = () => {
                 <Link href={`/profile/${data.authorId}`}>
                   <div>
                     <p>{data.name}</p>
-                    <span>@{data.nickname}</span>
+                    {/* <span>@{data.nickname}</span> */}
                   </div>
                 </Link>
                 {data.authorId === user?.id ? (
@@ -134,9 +134,16 @@ const Tweet = () => {
               </TweetPostInfoText>
               <TweetPostAction>
                 <span>{data.date}</span>
-                <Button onClick={() => onClickLike()}>
-                  {likeMe ? "❤️" : "💙"} {likes}
-                </Button>
+                {!isLoadingLike ? (
+                  <Button
+                    onClick={() => onClickLike()}
+                    disabled={isLoadingLike}
+                  >
+                    {likeMe ? "❤️" : "💙"} {likes}
+                  </Button>
+                ) : (
+                  <Hourglass />
+                )}
               </TweetPostAction>
             </TweetPostInfo>
           </TweetPost>

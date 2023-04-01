@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Button, TextInput, Separator } from "react95";
+import React, { useState, useEffect, useRef } from "react";
+import { Button, TextInput, Separator, Hourglass } from "react95";
 import Link from "next/link";
 
 import {
@@ -20,10 +20,12 @@ import {
 } from "./style";
 import { useAuth } from "../../hooks/useAuth";
 import Tweet from "../../components/tweets";
+import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
+import { Input } from "../../components/input";
 
 export const Content = () => {
   const result = useGetTweetsQuery();
-  const { isLoading, error, data } = result;
+  const { data } = result;
 
   const auth = useAuth();
   const { user } = auth;
@@ -31,7 +33,7 @@ export const Content = () => {
   const [input, setInput] = useState("");
   let countInput = 280 - input.length;
 
-  const [addTweet, { isLoading: isLoadingAdd }] = useAddTweetMutation();
+  const [addTweet, { isLoading }] = useAddTweetMutation();
 
   const addTweetClick = async () => {
     if (input.length > 280) {
@@ -52,7 +54,7 @@ export const Content = () => {
       console.log("error", error);
     }
   };
-
+  console.log("isLoading", isLoading);
   return (
     <>
       <HomeBlock>
@@ -61,28 +63,35 @@ export const Content = () => {
 
       <TweetBlock>
         <Avatar url={user?.avatar ?? ""} />
-        <TextInput
+
+        <Input
           multiline
           variant="flat"
           rows={3}
           placeholder="What's happening?"
-          onChange={(e) => setInput(e.target.value)}
-          value={input}
+          setState={setInput}
+          state={input}
           fullWidth
         />
       </TweetBlock>
 
       <TweetButtonBlock>
-        <span>{countInput}</span>
+        <div className="button">
+          <span>{countInput}</span>
 
-        <Button
-          primary
-          size="sm"
-          disabled={!input}
-          onClick={() => addTweetClick()}
-        >
-          Tweet
-        </Button>
+          {!isLoading ? (
+            <Button
+              primary
+              size="sm"
+              disabled={!input || isLoading}
+              onClick={() => addTweetClick()}
+            >
+              Tweet
+            </Button>
+          ) : (
+            <Hourglass size={20} />
+          )}
+        </div>
       </TweetButtonBlock>
 
       <div>
