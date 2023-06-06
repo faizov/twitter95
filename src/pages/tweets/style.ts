@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const TweetHeaed = styled.div`
+export const TweetHead = styled.div`
   position: sticky;
   height: 64px;
   background: #c6c6c6;
@@ -58,4 +58,8 @@ export const TweetPostAction = styled.div`
   span {
     color: rgb(83, 100, 113);
   }
+`;
+
+export const TweetComments= styled.div`
+ 
 `;

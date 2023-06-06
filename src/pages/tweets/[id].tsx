@@ -12,7 +12,7 @@ import {
 import { Avatar } from "../../components/customs";
 
 import {
-  TweetHeaed,
+  TweetHead,
   TweetPostBlock,
   TweetPost,
   TweetPostInfo,
@@ -24,6 +24,7 @@ import {
 import { useAuth } from "../../hooks/useAuth";
 import { createHashTags } from "../../utils/createHashTags";
 import { likeTweetLocal } from "../../utils/likeTweet";
+import { Comments } from "./comments";
 
 const Tweet = () => {
   const router = useRouter();
@@ -81,14 +82,14 @@ const Tweet = () => {
 
   return (
     <>
-      <TweetHeaed onClick={() => router.back()}>
+      <TweetHead onClick={() => router.back()}>
         <Button square variant="thin">
           <span role="img" aria-label="recycle">
             &#8592;
           </span>
         </Button>
         Tweet
-      </TweetHeaed>
+      </TweetHead>
       <TweetPostBlock>
         {data ? (
           <TweetPost>
@@ -103,7 +104,6 @@ const Tweet = () => {
                 <Link href={`/profile/${data.authorId}`}>
                   <div>
                     <p>{data.name}</p>
-                    {/* <span>@{data.nickname}</span> */}
                   </div>
                 </Link>
                 {data.authorId === user?.id ? (
@@ -149,6 +149,8 @@ const Tweet = () => {
           </TweetPost>
         ) : null}
       </TweetPostBlock>
+
+      <Comments id={id} user={user} />
     </>
   );
 };

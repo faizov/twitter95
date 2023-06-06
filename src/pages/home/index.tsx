@@ -9,18 +9,9 @@ import {
 
 import { Avatar } from "../../components/customs";
 
-import {
-  FrameStyled,
-  HomeBlock,
-  TweetBlock,
-  TweetButtonBlock,
-  TweetPostBlock,
-  TweetPost,
-  TweetPostInfo,
-} from "./style";
+import { FrameStyled, HomeBlock, TweetBlock, TweetButtonBlock } from "./style";
 import { useAuth } from "../../hooks/useAuth";
 import Tweet from "../../components/tweets";
-import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import { Input } from "../../components/input";
 
 export const Content = () => {
@@ -44,11 +35,11 @@ export const Content = () => {
         const body = {
           name: user.name,
           avatar: user.avatar,
-          nickname: "YuriyF",
           text: input,
         };
-        setInput("");
+
         await addTweet(body);
+        setInput("");
       }
     } catch (error) {
       console.log("error", error);

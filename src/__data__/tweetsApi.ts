@@ -4,6 +4,7 @@ import { HYDRATE } from "next-redux-wrapper";
 import { api } from "./api";
 
 export interface Tweet {
+  id: string | string[] | undefined;
   _id: string;
   authorId: string;
   date: string;
@@ -14,6 +15,19 @@ export interface Tweet {
   likes: number;
 }
 
+export type Comment = {
+  tweetId: string | string[] | undefined;
+  id: number;
+  author: {
+    id: number;
+    name: string;
+    avatar: string;
+  };
+  date: string;
+  text: string;
+};
+
+type CommentsResponse = Comment[];
 type TweetsResponse = Tweet[];
 
 export const tweetsApi = api.injectEndpoints({
@@ -59,6 +73,28 @@ export const tweetsApi = api.injectEndpoints({
       }),
       invalidatesTags: (result, error, id) => [{ type: "Tweets", id }],
     }),
+    addComment: build.mutation<Comment, Partial<Comment>>({
+      query({ tweetId, ...body }) {
+        return {
+          url: `/tweets/${tweetId}/comments`,
+          method: "POST",
+          body,
+        };
+      },
+      invalidatesTags: [{ type: "Comments", id: "LIST" }],
+    }),
+    getComments: build.query<CommentsResponse, string>({
+      query: (id) => `/tweets/${id}/comments`,
+      // highlight-start
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: "Comments" as const, id })),
+              { type: "Comments", id: "LIST" },
+            ]
+          : [{ type: "Comments", id: "LIST" }],
+      // highlight-end
+    }),
   }),
 });
 
@@ -70,6 +106,8 @@ export const {
   useLazyGetTweetsQuery,
   useDeleteTweetMutation,
   useLikeTweetMutation,
+  useAddCommentMutation,
+  useGetCommentsQuery,
 } = tweetsApi;
 
 export const {

@@ -42,6 +42,6 @@ export const api = createApi({
       return action.payload[reducerPath];
     }
   },
-  tagTypes: ["Tweets", "User"],
+  tagTypes: ["Tweets", "User", "Comments"],
   endpoints: () => ({}),
 });
